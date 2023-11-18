@@ -1,0 +1,46 @@
+reinforce_configs:
+  seed: 1234
+  shuffle: true
+  use_bucket: true
+  batching_key: "token"
+  batch_size: 4000  # tokens (bilingual)
+  buffer_size: 100000
+  save_freq: 100
+  num_kept_checkpoints: 1
+  victim_model: "/home/nfs01/zouw/models/cwmt_zhen_TF_best/best.ckpt"
+  victim_configs: "/home/nfs01/zouw/models/cwmt_zhen_TF_best/config.yaml"
+  code_file_path: "/home/nfs01/zouw/data/cwmt17_zh-en_processed/code.zh-en.txt"
+  knn: 12  # maximum nearest candidate to estimate norm-ball
+  zero_bleu_bound: 0.05 # minimum bleu values to accumulate exploration patience 
+  zero_bleu_patience: 10  # rounds to continue after bleu stays zero
+  gamma: 0.99
+  tau: 0.99  # EMA updates for the RL and diffusion
+  entropy_coef: 0.001  # entropy weight, scaled to similar with log probs loss
+  value_coef: 25  # keep similar scale with policy loss
+  r_s_weight: 0.01  # step reward weight
+  r_d_weight: 1  # episodic reward weight
+
+agent_configs:
+  # agent_update_steps: 160  # single thread step:n-thread * update_steps
+  agent_model_configs:
+    d_model: &dim 512
+    dropout: 0.1
+    num_layers: 4
+    num_heads: 8
+    action_range: [0.002, 80]  # the perturbation range (or std range)
+    action_roll_steps: 5  # for on-policy value function(rewards) learning
+    max_roll_steps: 40 
+    rho: 7  # karras diffusion setting
+
+
+  agent_optimizer_configs:
+    optimizer: "sgd"
+    learning_rate: 0.0001  # updates on the local
+    learning_rate_peak: 0.0005
+    learning_rate_warmup: 0
+    adam_betas: [0.9, 0.999] 
+    clip_grad_norm: 3.0  # overall gradient norm
+    scheduling: warmupexponentialdecay  # normed lr 
+    scheduler_configs:
+      d_model: *dim
+      warmup_steps: 0

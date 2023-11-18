@@ -1,0 +1,66 @@
+agent_configs:
+  attacker_model_configs:
+    action_roll_space: 5
+    action_space: 2
+    d_model: 512
+    d_word_vec: 512
+    dropout: 0.2
+    freeze_embedding: false
+  attacker_optimizer_configs:
+    adam_betas:
+    - 0.9
+    - 0.999
+    clip_grad_norm: 5.0
+    learning_rate: 5.0e-05
+    learning_rate_peak: 0.0001
+    learning_rate_warmup: 1000
+    optimizer: adam
+    scheduler_configs:
+      d_model: 512
+      warmup_steps: 100
+    scheduling: warmupexponentialdecay
+  attacker_update_steps: 120
+attack_configs:
+  adversarial: true
+  batch_size: 450
+  batching_key: token
+  buffer_size: 100000
+  code_file_path: /home/nfs01/zouw/data/cwmt17_zh-en_processed/code.zh-en.txt
+  entropy_coef: 0.05
+  gamma: 0.99
+  init_perturb_rate: 0.4
+  knn: 12
+  num_kept_checkpoints: 1
+  pinyin_data: chnchar2pinyin.dat
+  r_d_weight: 10
+  r_s_weight: 0.5
+  save_freq: 100
+  seed: 1234
+  shuffle: true
+  tau: 1.0
+  use_bucket: true
+  value_coef: 0.5
+  victim_configs: /home/nfs01/zouw/models/cwmt_zhen_TF_best/config.yaml
+  victim_model: /home/nfs01/zouw/models/cwmt_zhen_TF_best/best.ckpt
+discriminator_configs:
+  acc_bound: 0.8
+  acc_valid_freq: 10
+  converged_bound: 0.52
+  discriminator_model_configs:
+    d_model: 512
+    dropout: 0.2
+    freeze_embedding: false
+  discriminator_optimizer_configs:
+    T_max: 400
+    adam_betas:
+    - 0.9
+    - 0.999
+    clip_grad_norm: 5.0
+    learning_rate: 5.0e-05
+    learning_rate_min: 1.0e-05
+    optimizer: adam
+    scheduler_configs:
+      d_model: 512
+    scheduling: cosine
+  discriminator_update_steps: 80
+  patience: 100

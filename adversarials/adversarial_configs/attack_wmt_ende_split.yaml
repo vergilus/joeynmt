@@ -1,0 +1,67 @@
+attack_configs:
+  seed: 1234
+  shuffle: true
+  use_bucket: true
+  batching_key: "samples"
+  batch_size: 80
+  buffer_size: 100000
+  save_freq: 100
+  num_kept_checkpoints: 1
+  victim_model: "/home/nfs01/zouw/models/wmt_ende_TF_split/best.ckpt"
+  victim_configs: "/home/nfs01/zouw/models/wmt_ende_TF_split/config.yaml"
+  code_file_path: "/home/nfs01/zouw/data/wmt14_en-de_processed/code.en-de.txt"
+  # pinyin_data: "chnchar2pinyin.dat"
+  init_perturb_rate: 0.3   #for random synthetic baseline
+  knn: 12  # maximum nearest candidate
+  gamma: 0.99
+  tau: 1.0
+  entropy_coef: 0.05
+  value_coef: 0.5
+  adversarial: True
+  r_s_weight: 0.5
+  r_d_weight: 10
+
+agent_configs:
+  attacker_update_steps: 120  # single thread step:n-thread * update_steps
+  attacker_model_configs:
+    action_space: 2
+    action_roll_space: 5
+    d_word_vec: 512
+    d_model: &dim 512
+    dropout: 0.2
+    freeze_embedding: False 
+
+  attacker_optimizer_configs:
+    optimizer: "adam"
+    learning_rate: 0.0002
+    learning_rate_peak: 0.001
+    learning_rate_warmup: 1000
+    adam_betas: [0.9, 0.999]
+    clip_grad_norm: 5.0  # gradient clipping is crutial for learning variant exploration 
+    scheduling: warmupexponentialdecay
+    scheduler_configs:
+      d_model: *dim
+      warmup_steps: 100
+
+discriminator_configs:
+  discriminator_update_steps: 80
+  acc_bound: 0.80
+  converged_bound: 0.52
+  acc_valid_freq: 10
+  patience: 100
+
+  discriminator_model_configs:
+    d_model: *dim
+    dropout: 0.2
+    freeze_embedding: False
+
+  discriminator_optimizer_configs:
+    optimizer: "adam"
+    learning_rate: 0.0001
+    learning_rate_min: 0.00001
+    adam_betas: [0.9, 0.999]
+    clip_grad_norm: 5.0  # gradient clipping is crutial for learning variant exploration 
+    scheduling: cosine
+    T_max: 400
+    scheduler_configs:
+      d_model: *dim

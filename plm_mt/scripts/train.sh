@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES="0,1,2,3" python -m plm_mt.main train plm_mt/configs/transformer-bart_en2zh.yaml 

@@ -1,0 +1,86 @@
+name: "transformer"
+
+data:
+    src: "en"
+    trg: "zh"
+    temp_path: "/home/nfs01/zouw/temp/zh-en_data/"
+    plm_path: "/home/nfs01/zouw/models/huggingface/mbart"
+    train: "/home/nfs01/zouw/data/cwmt17_zh-en_processed/train.tok"
+    dev: "/home/nfs01/zouw/data/cwmt17_zh-en_processed/newstest2017.tok"
+    test: "/home/nfs01/zouw/data/cwmt17_zh-en_processed/newstest2018.tok"
+    level: "bpe"
+    lowercase: False
+    max_sent_length: 100
+    src_vocab: "/home/nfs01/zouw/temp/zh-en_data/vocab.txt"
+    src_voc_limit: 50000
+    trg_vocab: "/home/nfs01/zouw/temp/zh-en_data/vocab.txt"
+    trg_voc_limit: 50000
+
+testing:
+    beam_size: 4
+    alpha: 1.0
+
+training:
+    random_seed: 42
+    optimizer: "adam"
+    normalization: "tokens"
+    adam_betas: [0.9, 0.98]
+    scheduling: "noam"
+    patience: 8
+    decrease_factor: 0.7
+    loss: "crossentropy"
+    learning_rate: 0.0002
+    learning_rate_min: 0.00000001
+    weight_decay: 0.0
+    label_smoothing: 0.1
+    batch_size: 40000  # for 32G V100 *4
+    batch_type: "token"
+    eval_batch_size: 3000
+    eval_batch_type: "token"
+    batch_multiplier: 3
+    early_stopping_metric: "ppl"
+    epochs: 100
+    validation_freq: 400
+    logging_freq: 100
+    eval_metric: "bleu"
+    model_dir: "/home/nfs01/zouw/models/cwmt_enzh_TF_bart"
+    overwrite: False
+    shuffle: True
+    use_cuda: True
+    max_output_length: 100
+    print_valid_sents: [0, 1, 2, 3]
+    keep_best_ckpts: 3
+
+model:
+    plm_path: "/home/nfs01/zouw/models/huggingface/mbart/"
+    initializer: "xavier"
+    bias_initializer: "zeros"
+    init_gain: 1.0
+    embed_initializer: "xavier"
+    embed_init_gain: 1.0
+    tied_embeddings: True
+    tied_softmax: False  # the loaded embedding shall not be tied
+    encoder:
+        type: "transformer"
+        num_layers: 6
+        num_heads: 8
+        embeddings:
+            embedding_dim: 1024  # provided by plm embeddings
+            scale: True
+            dropout: 0.
+        # typically ff_size = 4 x hidden_size
+        hidden_size: 1024
+        ff_size: 2048
+        dropout: 0.1
+    decoder:
+        type: "transformer"
+        num_layers: 6
+        num_heads: 8
+        embeddings:
+            embedding_dim: 512  # provided by plm embeddings
+            scale: True
+            dropout: 0.
+        # typically ff_size = 4 x hidden_size
+        hidden_size: 1024
+        ff_size: 2048
+        dropout: 0.1
