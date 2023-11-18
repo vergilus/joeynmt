@@ -1,4 +1,4 @@
-# &nbsp; ![Joey-NMT](joey-small.png) Joey NMT
+# &nbsp; :koala: Joey NMT
 [![Build Status](https://travis-ci.com/joeynmt/joeynmt.svg?branch=main)](https://travis-ci.org/joeynmt/joeynmt)
 
 ## Goal and Purpose
