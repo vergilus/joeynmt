@@ -228,14 +228,14 @@ def count_nearest(nearest_vocab_path:str):
 
 if __name__=="__main__":
     base_dir="/home/nfs01/zouw/policy/attack_bart_en2de_log/"
-    src_path = os.path.join(base_dir, "in_origin.14")
+    src_path = os.path.join(base_dir, "in_origin.13")
     trg_path = "/home/nfs01/zouw/data/cwmt17_zh-en_processed/subword_processed/newstest2018.sub.de"
-    perturbed_src_path = os.path.join(base_dir, "in_perturbed.14")
-    # chaf, ter = check_charF1(
-    #     src_path=src_path,
-    #     perturbed_src_path=perturbed_src_path
-    # )
-    print(count_nearest("/home/nfs01/zouw/policy/attack_en2zh_split_log/near_vocab"))
+    perturbed_src_path = os.path.join(base_dir, "in_perturbed.13")
+    chaf, ter = check_charF1(
+        src_path=src_path,
+        perturbed_src_path=perturbed_src_path
+    )
+    # print(count_nearest("/home/nfs01/zouw/policy/attack_de2en_split_log/near_vocab"))
     # check_semantic(src_path, trg_path)
     # check_semantic_baichuan(src_path, trg_path)
 

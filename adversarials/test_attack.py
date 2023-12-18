@@ -292,7 +292,7 @@ def test_attack():
                         candidates_emb = local_agent.src_embedding(padded_src.new_tensor(word2near_vocab[word_id.item()]))
                         nearest = candidates_emb.matmul(origin_emb)\
                             .div((candidates_emb*candidates_emb).sum(dim=-1))\
-                            .argmax(dim=-1).item()
+                            .argmax(dim=-1).item()   # cosine distance
                         target_word_id = word2near_vocab[word_id.item()][nearest]
                         if args.unk_ignore and src_vocab.is_unk(target_word_id.item()):
                             # undo this attack if UNK is set to be ignored

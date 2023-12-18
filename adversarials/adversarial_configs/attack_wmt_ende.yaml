@@ -3,7 +3,7 @@ attack_configs:
   shuffle: true
   use_bucket: true
   batching_key: "samples"
-  batch_size: 80
+  batch_size: 120
   buffer_size: 100000
   save_freq: 100
   num_kept_checkpoints: 1
@@ -22,7 +22,7 @@ attack_configs:
   r_d_weight: 10
 
 agent_configs:
-  attacker_update_steps: 120  # single thread step:n-thread * update_steps
+  attacker_update_steps: 80  # single thread step:n-thread * update_steps
   attacker_model_configs:
     action_space: 2
     action_roll_space: 5
